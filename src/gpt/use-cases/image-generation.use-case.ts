@@ -11,7 +11,7 @@ export const imageGenerationUseCase = async (
   openai: OpenAI,
   options: Options,
 ) => {
-  const { prompt, maskImage, originalImage } = options;
+  const { prompt } = options;
   // TO DO: Verify the original image
 
   const resp = await openai.images.generate({
@@ -24,12 +24,11 @@ export const imageGenerationUseCase = async (
   });
 
   // TO DO: Save the image in FileSystem
-  await downloadImageAsPng(resp.data[0].url);
+  const url = await downloadImageAsPng(resp.data[0].url);
 
-  console.log(resp);
   return {
-    url: resp.data[0].url,
-    localPath: '',
+    url,
+    openAIUrl: resp.data[0].url,
     revised_promp: resp.data[0].revised_prompt,
   };
 };
