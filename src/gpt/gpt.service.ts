@@ -79,4 +79,15 @@ export class GptService {
   async imageGeneration(imageGenerationDto: ImageGenerationDto) {
     return imageGenerationUseCase(this.openai, { ...imageGenerationDto });
   }
+
+  getGeneratedImage(fileName: string) {
+    const filePath = path.resolve('./', './generated/images/', fileName);
+    const isFileExist = fs.existsSync(filePath);
+
+    if (!isFileExist) {
+      throw new NotFoundException('File not found');
+    }
+
+    return filePath;
+  }
 }
