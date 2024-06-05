@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import * as path from 'path';
+// import * as path from 'path';
 
 import OpenAI from 'openai';
 import { downloadBase64ImageAsPng, downloadImageAsPng } from '../../helpers';
@@ -27,10 +27,11 @@ export const imageGenerationUseCase = async (
     });
 
     // Save the image in FileSystem
-    const url = await downloadImageAsPng(resp.data[0].url);
+    const fileName = await downloadImageAsPng(resp.data[0].url);
+    const url = `${process.env.SERVER_URL}/gpt/image-generation/${fileName}`;
 
     return {
-      url, // <--- TO DO: http://localhost:3000/image-generator/nameFile.png
+      url,
       openAIUrl: resp.data[0].url,
       revised_promp: resp.data[0].revised_prompt,
     };
@@ -50,12 +51,11 @@ export const imageGenerationUseCase = async (
     response_format: 'url',
   });
 
-  const localImagePath = await downloadImageAsPng(response.data[0].url);
-  const fileName = path.basename(localImagePath);
-  const publicUrl = `localhost:3000/${fileName}`; // <--- Just a temporal solution
+  const fileName = await downloadImageAsPng(response.data[0].url);
+  const url = `${process.env.SERVER_URL}/gpt/image-generation/${fileName}`;
 
   return {
-    url: publicUrl, // <--- TO DO: http://localhost:3000/image-generator/nameFile.png
+    url,
     openAIUrl: response.data[0].url,
     revised_promp: response.data[0].revised_prompt,
   };
