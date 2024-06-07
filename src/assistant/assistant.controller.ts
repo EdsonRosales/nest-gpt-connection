@@ -8,7 +8,7 @@ export class AssistantController {
 
   @Post('create-thread')
   async createThread() {
-    return 'createThread';
+    return this.assistantService.createThread();
   }
 
   @Post('user-question')
