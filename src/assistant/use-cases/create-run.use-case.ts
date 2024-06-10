@@ -13,4 +13,6 @@ export const createRunUseCase = async (openai: OpenAI, options: Options) => {
     // instructions: ¡CAUTION! assistant_id can override the assistant_id set in the thread.
   });
   console.log({ run });
+
+  return run;
 };
