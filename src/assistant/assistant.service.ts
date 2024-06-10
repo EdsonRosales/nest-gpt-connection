@@ -6,6 +6,7 @@ import {
   createMessageUseCase,
   createRunUseCase,
   createThreadUseCase,
+  getMessageListUseCase,
 } from './use-cases';
 import { QuestionDto } from './dtos/question.dto';
 @Injectable()
@@ -20,7 +21,7 @@ export class AssistantService {
 
   async userQuestion(questionDto: QuestionDto) {
     const { question, threadId } = questionDto;
-    const message = await createMessageUseCase(this.openai, {
+    await createMessageUseCase(this.openai, {
       question,
       threadId,
     });
@@ -28,5 +29,9 @@ export class AssistantService {
     const run = await createRunUseCase(this.openai, { threadId });
 
     await checkCompleteStatusUseCase(this.openai, { runId: run.id, threadId });
+
+    const messages = await getMessageListUseCase(this.openai, { threadId });
+
+    return messages;
   }
 }
